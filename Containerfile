@@ -36,8 +36,8 @@ RUN chown -R appuser:appuser /app
 USER appuser
 
 EXPOSE 3000
-
-ENV RUST_LOG=info
+# temp change
+ENV RUST_LOG=debug
 ENV HOST=0.0.0.0
 ENV PORT=3000
 
