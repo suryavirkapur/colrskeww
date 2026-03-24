@@ -25,7 +25,6 @@ pub async fn index() -> poem::Response {
                     <select name="deficiency" id="deficiency">
                         <option value="deutan">Deuteranopia (Red-Green)</option>
                         <option value="protan">Protanopia (Red-Green)</option>
-                        <option value="tritan">Tritanopia (Blue-Yellow)</option>
                     </select>
                 </div>
                 <input type="file" name="upload" id="upload" required>
@@ -52,8 +51,9 @@ pub async fn index() -> poem::Response {
                 <ul>
                     <li><code>deutan</code> or <code>deuteranopia</code> - Green color blindness (most common)</li>
                     <li><code>protan</code> or <code>protanopia</code> - Red color blindness</li>
-                    <li><code>tritan</code> or <code>tritanopia</code> - Blue color blindness (rare)</li>
                 </ul>
+
+                <p>This build follows the Viénot 1999 display model directly, so it currently supports protanopia and deuteranopia only.</p>
 
                 <h3>Response</h3>
                 <p>Returns a PNG image showing how the uploaded image would appear to someone with the specified color vision deficiency.</p>

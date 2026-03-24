@@ -54,7 +54,10 @@ pub async fn upload(mut multipart: poem::web::Multipart) -> poem::Response {
             Err(e) => {
                 return poem::Response::builder()
                     .status(poem::http::StatusCode::BAD_REQUEST)
-                    .body(format!("Simulation error: {}. Supported types: 'deutan', 'deuteranopia', 'protan', 'protanopia', 'tritan', 'tritanopia'", e));
+                    .body(format!(
+                        "Simulation error: {}. Supported types: 'deutan', 'deuteranopia', 'protan', 'protanopia'",
+                        e
+                    ));
             }
         };
 

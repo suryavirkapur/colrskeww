@@ -2,7 +2,7 @@
 
 ## Overview
 
-The implementation uses the **Viénot 1999** algorithm, which is a widely accepted and scientifically validated method for simulating dichromacy (complete loss of one type of cone cell). This approach transforms colors through the LMS color space to accurately simulate the visual experience of people with color blindness.
+The implementation now follows the **Viénot 1999** display model directly for **protanopia** and **deuteranopia**. It uses the paper's gamma model, deficiency-specific gamut reduction step, BT.709/Judd-Vos/Smith-Pokorny RGB-to-LMS transform, and the published projection matrices.
 
 
 
@@ -11,15 +11,17 @@ The implementation uses the **Viénot 1999** algorithm, which is a widely accept
 ```
 Input RGB Image
        ↓
-Convert to Linear RGB (remove gamma)
+Decode Gamma (power 2.2)
+       ↓
+Apply Deficiency-Specific Gamut Reduction
        ↓
 Transform to LMS Color Space
        ↓
 Apply Dichromacy Simulation Matrix
        ↓
-Transform back to Linear RGB
+Transform back to RGB
        ↓
-Apply Gamma Correction (to sRGB)
+Encode Gamma (power 1/2.2)
        ↓
 Output Simulated Image
 ```
@@ -34,6 +36,7 @@ The web handler (`src/handlers/handle_image.rs`) provides a multipart form endpo
   - `upload`: Image file (PNG, JPEG, etc.)
   - `deficiency`: Color blindness type (optional, defaults to "deutan")
 - **Response**: PNG image showing simulated color blindness view
+- **Supported types**: `deutan`, `deuteranopia`, `protan`, `protanopia`
 
 ## Scientific Accuracy
 
@@ -41,15 +44,14 @@ This implementation is based on the following research:
 
 1. **Viénot, F., Brettel, H., & Mollon, J. D. (1999)**. "Digital video colourmaps for checking the legibility of displays by dichromats." Color Research & Application, 24(4), 243-252.
 
-2. **Hunt-Pointer-Estevez LMS transformation** - Standard transformation matrices for converting between RGB and LMS color spaces.
-
-The algorithm provides scientifically accurate simulation of complete dichromacy (total loss of one cone type). It does not simulate anomalous trichromacy (reduced sensitivity of one cone type), which is actually more common than complete dichromacy.
+The algorithm provides a source-backed simulation of complete **protanopia** and **deuteranopia** for the display model described in the paper. It does not simulate anomalous trichromacy, and it does not currently include a source-backed tritanopia path.
 
 ## Limitations
 
-1. **Dichromacy Only**: Simulates complete loss of cone cells, not reduced sensitivity
-2. **No Individual Variation**: Uses average population parameters
-3. **Display Limitations**: Final output is limited by the display device's color gamut
+1. **Protan/Deutan Only**: This build intentionally supports only the Viénot 1999 paths that are fully implemented and tested
+2. **Dichromacy Only**: Simulates complete loss of cone cells, not reduced sensitivity
+3. **No Individual Variation**: Uses average population parameters
+4. **Display Model Bound**: The transform matches the display assumptions in the paper rather than every possible image pipeline
 
 ## TODO
 
